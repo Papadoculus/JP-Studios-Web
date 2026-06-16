@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Void Hoodie — JP STUDIOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --red:#C8001A;--red-glow:rgba(200,0,26,.3);
+  --cream:#f0ede8;--cream-dim:rgba(240,237,232,.5);
+  --black:#000;--surface:#0d0d0d;--surface-2:#141414;--surface-3:#1c1c1c;
+  --border:rgba(240,237,232,.08);--border-hover:rgba(240,237,232,.18);
+  --font-head:"Bebas Neue",sans-serif;--font-body:"DM Sans",sans-serif;
+  --ease-out:cubic-bezier(.22,1,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--black);color:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body::before{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");background-size:256px;pointer-events:none;z-index:1000}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(0,0,0,.8);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-head);font-size:1.6rem;letter-spacing:.1em;color:var(--cream);text-decoration:none}
+.nav-logo span{color:var(--red)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--cream)}
+.nav-actions{display:flex;align-items:center;gap:1rem}
+.nav-icon{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--cream-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;text-decoration:none}
+.nav-icon:hover{border-color:var(--border-hover);color:var(--cream)}
+.nav-cart{position:relative}
+.cart-badge{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* BREADCRUMB */
+.breadcrumb{
+  padding-top:88px;padding-bottom:0;
+  max-width:1280px;margin:0 auto;padding-left:2.5rem;padding-right:2.5rem;
+  display:flex;align-items:center;gap:.5rem;
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);
+}
+.breadcrumb a{color:var(--cream-dim);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--cream)}
+.breadcrumb span{color:var(--cream-dim)}
+.breadcrumb .current{color:var(--cream)}
+
+/* PRODUCT LAYOUT */
+.product-page{
+  max-width:1280px;margin:0 auto;
+  padding:2rem 2.5rem 6rem;
+  display:grid;grid-template-columns:1fr 480px;
+  gap:4rem;align-items:start;
+}
+
+/* GALLERY */
+.gallery{position:sticky;top:80px}
+.gallery-main{
+  aspect-ratio:3/4;
+  background:var(--surface);border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  margin-bottom:1rem;
+}
+.gallery-main-inner{
+  width:100%;height:100%;
+  background:linear-gradient(160deg,var(--surface-2),var(--surface-3));
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .6s var(--ease-out);
+}
+.gallery-main:hover .gallery-main-inner{transform:scale(1.03)}
+.gallery-main-inner svg{opacity:.08;width:80px;height:80px}
+.gallery-tag{
+  position:absolute;top:1.25rem;left:1.25rem;
+  background:var(--red);color:#fff;
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:4px 10px;
+}
+.gallery-zoom{
+  position:absolute;bottom:1.25rem;right:1.25rem;
+  width:36px;height:36px;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  color:var(--cream-dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;
+}
+.gallery-zoom:hover{border-color:var(--border-hover);color:var(--cream)}
+
+.gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:.625rem}
+.thumb{
+  aspect-ratio:3/4;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:pointer;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .18s;
+}
+.thumb.active{border-color:var(--red)}
+.thumb:hover:not(.active){border-color:var(--border-hover)}
+.thumb-inner{
+  width:100%;height:100%;
+  background:linear-gradient(160deg,var(--surface-2),var(--surface-3));
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s var(--ease-out);
+}
+.thumb:hover .thumb-inner{transform:scale(1.08)}
+.thumb-inner svg{opacity:.08;width:24px;height:24px}
+
+/* PRODUCT INFO */
+.product-info{padding-top:.5rem}
+.product-eyebrow{
+  font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.75rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.product-eyebrow::before{content:"";width:16px;height:1px;background:var(--red)}
+
+.product-title{
+  font-family:var(--font-head);
+  font-size:clamp(2.5rem,4vw,3.8rem);
+  line-height:.9;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--cream);margin-bottom:.5rem;
+}
+
+/* rating */
+.product-rating{
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1.25rem;
+}
+.stars{color:var(--red);letter-spacing:2px;font-size:.8rem}
+.rating-score{font-size:.82rem;color:var(--cream);font-weight:500}
+.rating-count{font-size:.78rem;color:var(--cream-dim)}
+.rating-sep{color:var(--border-hover)}
+
+/* price */
+.price-row{
+  display:flex;align-items:baseline;gap:.875rem;
+  margin-bottom:1.5rem;padding-bottom:1.5rem;
+  border-bottom:1px solid var(--border);
+}
+.price-main{
+  font-family:var(--font-head);
+  font-size:2.2rem;letter-spacing:.04em;
+  color:var(--cream);
+}
+.price-old{
+  font-size:1rem;color:var(--cream-dim);
+  text-decoration:line-through;
+}
+.price-badge{
+  font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  background:rgba(200,0,26,.15);color:var(--red);
+  border:1px solid rgba(200,0,26,.25);
+  padding:3px 8px;font-weight:600;
+}
+
+/* color selector */
+.selector-label{
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cream-dim);margin-bottom:.75rem;
+  display:flex;justify-content:space-between;
+}
+.selector-label strong{color:var(--cream);font-weight:500}
+.color-opts{display:flex;gap:.625rem;margin-bottom:1.5rem}
+.color-opt{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid transparent;cursor:pointer;
+  position:relative;transition:transform .18s;
+}
+.color-opt:hover{transform:scale(1.12)}
+.color-opt.active{border-color:var(--cream)}
+.color-opt.active::after{
+  content:"";position:absolute;inset:-5px;
+  border-radius:50%;border:1px solid rgba(240,237,232,.25);
+}
+
+/* size selector */
+.size-opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.size-opt{
+  min-width:52px;height:44px;padding:0 .75rem;
+  border:1px solid var(--border);background:transparent;
+  color:var(--cream-dim);font-size:.78rem;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;
+  transition:all .18s;font-family:var(--font-body);
+  display:flex;align-items:center;justify-content:center;
+}
+.size-opt:hover{border-color:var(--border-hover);color:var(--cream)}
+.size-opt.active{border-color:var(--red);color:var(--cream);background:rgba(200,0,26,.1)}
+.size-opt:disabled,.size-opt.sold{
+  opacity:.3;cursor:not-allowed;
+  text-decoration:line-through;
+}
+
+.size-guide{
+  font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--red);cursor:pointer;text-decoration:underline;
+  background:none;border:none;font-family:var(--font-body);margin-bottom:1.75rem;
+}
+
+/* qty + CTA */
+.add-row{
+  display:flex;gap:.75rem;margin-bottom:1rem;
+}
+.qty-ctrl{
+  display:flex;align-items:center;
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+.qty-btn{
+  width:44px;height:52px;
+  background:transparent;border:none;color:var(--cream-dim);
+  cursor:pointer;font-size:1.2rem;
+  transition:color .18s;display:flex;align-items:center;justify-content:center;
+}
+.qty-btn:hover{color:var(--cream)}
+.qty-val{
+  width:44px;text-align:center;
+  font-size:.9rem;color:var(--cream);font-weight:500;
+  border:none;background:transparent;font-family:var(--font-body);
+  pointer-events:none;
+}
+.btn-add{
+  flex:1;height:52px;
+  background:var(--red);color:#fff;border:none;
+  font-family:var(--font-head);font-size:1.1rem;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .2s var(--ease-out),box-shadow .2s;
+}
+.btn-add::before{
+  content:"";position:absolute;inset:0;
+  background:rgba(255,255,255,.12);
+  transform:translateX(-100%) skewX(-15deg);
+  transition:transform .4s var(--ease-out);
+}
+.btn-add:hover::before{transform:translateX(120%) skewX(-15deg)}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 8px 32px var(--red-glow)}
+.btn-add:active{transform:translateY(0)}
+
+.btn-wish{
+  width:52px;height:52px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--cream-dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.btn-wish:hover{border-color:var(--red);color:var(--red)}
+
+/* trust badges */
+.trust-badges{
+  display:flex;gap:1.25rem;flex-wrap:wrap;
+  padding:1.25rem 0;border-top:1px solid var(--border);margin-bottom:1.5rem;
+}
+.trust-item{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--cream-dim)}
+.trust-item svg{color:var(--red);flex-shrink:0}
+
+/* accordion */
+.accordion{border-top:1px solid var(--border)}
+.acc-item{border-bottom:1px solid var(--border)}
+.acc-trigger{
+  width:100%;display:flex;justify-content:space-between;align-items:center;
+  padding:1.1rem 0;
+  background:none;border:none;color:var(--cream);cursor:pointer;
+  font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;font-family:var(--font-body);
+  transition:color .18s;
+}
+.acc-trigger:hover{color:var(--cream-dim)}
+.acc-icon{transition:transform .25s var(--ease-out);flex-shrink:0;color:var(--cream-dim)}
+.acc-item.open .acc-icon{transform:rotate(45deg)}
+.acc-body{
+  overflow:hidden;max-height:0;
+  transition:max-height .35s var(--ease-out);
+}
+.acc-item.open .acc-body{max-height:400px}
+.acc-content{
+  padding-bottom:1.25rem;
+  font-size:.85rem;line-height:1.75;color:var(--cream-dim);
+}
+.acc-content ul{padding-left:1.1rem;display:flex;flex-direction:column;gap:.4rem}
+
+/* related */
+.related{
+  max-width:1280px;margin:0 auto;
+  padding:0 2.5rem 6rem;
+}
+.section-eyebrow{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--red);margin-bottom:.75rem}
+.section-title{font-family:var(--font-head);font-size:2.5rem;line-height:.92;text-transform:uppercase;margin-bottom:2rem}
+.rel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.rel-card{
+  background:var(--surface);border:1px solid var(--border);
+  text-decoration:none;color:inherit;
+  transition:border-color .25s,transform .3s var(--ease-out);display:block;
+}
+.rel-card:hover{border-color:var(--border-hover);transform:translateY(-4px)}
+.rel-img{aspect-ratio:3/4;background:var(--surface-2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.rel-img svg{opacity:.09;width:36px;height:36px}
+.rel-info{padding:.875rem}
+.rel-name{font-family:var(--font-head);font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+.rel-price{font-size:.82rem;color:var(--cream-dim)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.product-page{grid-template-columns:1fr;gap:2.5rem}.gallery{position:static}.rel-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){nav{padding:0 1.25rem}.nav-links{display:none}.product-page,.related{padding-left:1.25rem;padding-right:1.25rem}.breadcrumb{padding-left:1.25rem;padding-right:1.25rem}.rel-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="01-hero.html" class="nav-logo">JP<span>S</span>TUDIOS</a>
+  <ul class="nav-links">
+    <li><a href="02-catalog.html">Colección</a></li>
+    <li><a href="#">Lookbook</a></li>
+    <li><a href="#">Nosotros</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon" aria-label="Buscar">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <a href="05-auth.html" class="nav-icon" aria-label="Cuenta">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+    <a href="04-cart.html" class="nav-icon nav-cart" aria-label="Carrito">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-badge">3</span>
+    </a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="01-hero.html">Inicio</a>
+  <span>›</span>
+  <a href="02-catalog.html">Colección</a>
+  <span>›</span>
+  <a href="02-catalog.html">Hoodies</a>
+  <span>›</span>
+  <span class="current">Void Hoodie — Onyx</span>
+</div>
+
+<div class="product-page">
+
+  <!-- GALLERY -->
+  <div class="gallery">
+    <div class="gallery-main">
+      <div class="gallery-main-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+      </div>
+      <div class="gallery-tag">SS25</div>
+      <button class="gallery-zoom" aria-label="Ampliar">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      </button>
+    </div>
+    <div class="gallery-thumbs">
+      <div class="thumb active" onclick="setThumb(this)"><div class="thumb-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg></div></div>
+      <div class="thumb" onclick="setThumb(this)"><div class="thumb-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="9"/></svg></div></div>
+      <div class="thumb" onclick="setThumb(this)"><div class="thumb-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div></div>
+      <div class="thumb" onclick="setThumb(this)"><div class="thumb-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg></div></div>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="product-info">
+    <p class="product-eyebrow">Hoodie — Colección SS25</p>
+    <h1 class="product-title">Void<br>Hoodie<br>Onyx</h1>
+
+    <div class="product-rating">
+      <span class="stars">★★★★★</span>
+      <span class="rating-score">4.9</span>
+      <span class="rating-sep">·</span>
+      <span class="rating-count">127 reseñas</span>
+    </div>
+
+    <div class="price-row">
+      <span class="price-main">$899 MXN</span>
+      <span class="price-old">$1,100 MXN</span>
+      <span class="price-badge">−18%</span>
+    </div>
+
+    <!-- Color -->
+    <div class="selector-label">Color <strong>Onyx</strong></div>
+    <div class="color-opts">
+      <div class="color-opt active" style="background:#0d0d0d;border:2px solid var(--border-hover)" title="Onyx" onclick="setColor(this,'Onyx')"></div>
+      <div class="color-opt" style="background:#C8001A" title="Crimson" onclick="setColor(this,'Crimson')"></div>
+      <div class="color-opt" style="background:#374151" title="Ash" onclick="setColor(this,'Ash')"></div>
+      <div class="color-opt" style="background:#f0ede8" title="Cream" onclick="setColor(this,'Cream')"></div>
+    </div>
+
+    <!-- Size -->
+    <div class="selector-label">Talla <strong id="sizeLabel">—</strong></div>
+    <div class="size-opts">
+      <button class="size-opt sold" disabled>XS</button>
+      <button class="size-opt" onclick="setSize(this,'S')">S</button>
+      <button class="size-opt" onclick="setSize(this,'M')">M</button>
+      <button class="size-opt" onclick="setSize(this,'L')">L</button>
+      <button class="size-opt" onclick="setSize(this,'XL')">XL</button>
+      <button class="size-opt sold" disabled>XXL</button>
+    </div>
+    <button class="size-guide">Guía de tallas →</button>
+
+    <!-- Qty + CTA -->
+    <div class="add-row">
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(-1)" aria-label="Menos">−</button>
+        <input class="qty-val" id="qty" type="text" value="1" readonly aria-label="Cantidad"/>
+        <button class="qty-btn" onclick="changeQty(1)" aria-label="Más">+</button>
+      </div>
+      <button class="btn-add" onclick="addToCart()">Agregar al carrito</button>
+      <button class="btn-wish" aria-label="Guardar en wishlist">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </div>
+
+    <!-- Trust -->
+    <div class="trust-badges">
+      <div class="trust-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Envío gratis en pedidos +$999
+      </div>
+      <div class="trust-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        Cambios sin costo en 30 días
+      </div>
+      <div class="trust-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Pago 100% seguro
+      </div>
+    </div>
+
+    <!-- Accordion -->
+    <div class="accordion">
+      <div class="acc-item open">
+        <button class="acc-trigger" onclick="toggleAcc(this)">
+          Descripción
+          <svg class="acc-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <p>El Void Hoodie es la pieza central de la colección SS25. Fabricado en algodón premium 400g con un acabado suave al tacto. El diseño limpio y minimalista refleja la identidad de JP Studios: sin logos evidentes, solo actitud.</p>
+            <br>
+            <ul>
+              <li>Algodón 100% orgánico, 400 GSM</li>
+              <li>Bolsillo canguro reforzado</li>
+              <li>Cordones planos sin aro metálico</li>
+              <li>Costuras interiores planas</li>
+              <li>Lavado a máquina 30°C</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">
+          Guía de tallas
+          <svg class="acc-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <p>Todas las tallas están en medidas mexicanas. Para un fit oversized recomendamos subir una talla.</p>
+            <br>
+            <ul>
+              <li>S — Pecho 96cm, Largo 68cm</li>
+              <li>M — Pecho 102cm, Largo 71cm</li>
+              <li>L — Pecho 108cm, Largo 74cm</li>
+              <li>XL — Pecho 114cm, Largo 77cm</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">
+          Envíos y devoluciones
+          <svg class="acc-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <ul>
+              <li>Envío estándar: 3–5 días hábiles</li>
+              <li>Envío express: 1–2 días hábiles</li>
+              <li>Envío gratis en pedidos mayores a $999 MXN</li>
+              <li>Cambios y devoluciones sin costo en 30 días</li>
+              <li>Artículos en descuento: solo cambio de talla</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED -->
+<div class="related">
+  <p class="section-eyebrow">También te puede gustar</p>
+  <h2 class="section-title">Completa<br>tu look</h2>
+  <div class="rel-grid">
+    <a href="03-product-detail.html" class="rel-card">
+      <div class="rel-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8" width="36" height="36"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg></div>
+      <div class="rel-info"><div class="rel-name">Archive Jacket Vol.I</div><div class="rel-price">$1,299 MXN</div></div>
+    </a>
+    <a href="03-product-detail.html" class="rel-card">
+      <div class="rel-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8" width="36" height="36"><path d="M6 2v6l2 2-2 2v10h12V12l-2-2 2-2V2H6z"/></svg></div>
+      <div class="rel-info"><div class="rel-name">Signal Cargo — Ash</div><div class="rel-price">$749 MXN</div></div>
+    </a>
+    <a href="03-product-detail.html" class="rel-card">
+      <div class="rel-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8" width="36" height="36"><circle cx="12" cy="12" r="9"/></svg></div>
+      <div class="rel-info"><div class="rel-name">Static Tee — Crimson</div><div class="rel-price">$499 MXN</div></div>
+    </a>
+    <a href="03-product-detail.html" class="rel-card">
+      <div class="rel-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8" width="36" height="36"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div>
+      <div class="rel-info"><div class="rel-name">Tote Bag — Canvas</div><div class="rel-price">$349 MXN</div></div>
+    </a>
+  </div>
+</div>
+
+<script>
+let qty=1;
+function changeQty(d){qty=Math.max(1,qty+d);document.getElementById('qty').value=qty}
+function setColor(el,name){document.querySelectorAll('.color-opt').forEach(c=>c.classList.remove('active'));el.classList.add('active')}
+function setSize(el,s){document.querySelectorAll('.size-opt:not([disabled])').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('sizeLabel').textContent=s}
+function setThumb(el){document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));el.classList.add('active')}
+function toggleAcc(btn){
+  const item=btn.closest('.acc-item');
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+function addToCart(){
+  const btn=document.querySelector('.btn-add');
+  const orig=btn.textContent;
+  btn.textContent='✓ Agregado';
+  btn.style.background='#166534';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background=''},1800);
+}
+</script>
+</body>
+</html>
