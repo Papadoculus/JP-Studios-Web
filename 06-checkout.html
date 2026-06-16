@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Checkout — JP STUDIOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --red:#C8001A;--red-glow:rgba(200,0,26,.3);
+  --cream:#f0ede8;--cream-dim:rgba(240,237,232,.5);
+  --black:#000;--surface:#0d0d0d;--surface-2:#141414;--surface-3:#1c1c1c;
+  --border:rgba(240,237,232,.08);--border-hover:rgba(240,237,232,.18);
+  --success:#4ade80;--error:#ff4d4d;
+  --font-head:"Bebas Neue",sans-serif;--font-body:"DM Sans",sans-serif;
+  --ease-out:cubic-bezier(.22,1,.36,1);--ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--black);color:var(--cream);-webkit-font-smoothing:antialiased;min-height:100dvh}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body::before{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");background-size:256px;pointer-events:none;z-index:1000}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:64px;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:var(--font-head);font-size:1.6rem;letter-spacing:.1em;color:var(--cream);text-decoration:none}
+.nav-logo span{color:var(--red)}
+.nav-secure{display:flex;align-items:center;gap:.5rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim)}
+
+/* PROGRESS STEPS */
+.progress-bar-wrap{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:.875rem 0;
+}
+.steps{
+  max-width:640px;margin:0 auto;padding:0 2.5rem;
+  display:flex;align-items:center;
+}
+.step{
+  display:flex;align-items:center;gap:.5rem;
+  font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cream-dim);
+  flex:1;
+}
+.step.done{color:var(--success)}
+.step.active{color:var(--cream)}
+.step-num{
+  width:24px;height:24px;border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;flex-shrink:0;
+  transition:all .3s;
+}
+.step.done .step-num{background:var(--success);border-color:var(--success);color:var(--black)}
+.step.active .step-num{background:var(--red);border-color:var(--red);color:#fff}
+.step-connector{flex:1;height:1px;background:var(--border);margin:0 .5rem}
+.step.done + .step-connector{background:var(--success)}
+
+/* LAYOUT */
+.checkout-wrap{
+  max-width:1180px;margin:0 auto;
+  padding:3rem 2.5rem 6rem;
+  display:grid;grid-template-columns:1fr 380px;
+  gap:3.5rem;align-items:start;
+}
+
+/* FORM SIDE */
+.form-side{}
+
+/* section block */
+.form-block{
+  background:var(--surface);border:1px solid var(--border);
+  padding:2rem;margin-bottom:1.25rem;
+  animation:fadeIn .4s var(--ease-out) both;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.block-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;padding-bottom:1.25rem;
+  border-bottom:1px solid var(--border);
+}
+.block-num{
+  width:28px;height:28px;
+  background:var(--red);color:#fff;
+  font-family:var(--font-head);font-size:1rem;letter-spacing:.06em;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.block-title{font-family:var(--font-head);font-size:1.35rem;letter-spacing:.08em;text-transform:uppercase;margin-left:.875rem}
+.block-edit{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);cursor:pointer;background:none;border:none;font-family:var(--font-body);transition:opacity .2s}
+.block-edit:hover{opacity:.7}
+
+/* fields */
+.form-grid{display:grid;gap:.875rem}
+.form-grid.cols-2{grid-template-columns:1fr 1fr}
+.form-grid.cols-3{grid-template-columns:2fr 1fr 1fr}
+label{display:block;font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:.45rem}
+.form-input{
+  width:100%;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--cream);
+  font-family:var(--font-body);font-size:.9rem;
+  padding:.7rem .875rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+.form-input::placeholder{color:rgba(240,237,232,.22)}
+.form-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,0,26,.1)}
+.form-select{
+  width:100%;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--cream);
+  font-family:var(--font-body);font-size:.9rem;
+  padding:.7rem .875rem;outline:none;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='rgba(240,237,232,.4)' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .875rem center;
+  padding-right:2.5rem;
+  transition:border-color .2s;
+}
+.form-select:focus{border-color:var(--red)}
+
+/* shipping options */
+.ship-options{display:flex;flex-direction:column;gap:.625rem;margin-top:.25rem}
+.ship-opt{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem;border:1px solid var(--border);
+  cursor:pointer;transition:border-color .2s,background .2s;
+  position:relative;
+}
+.ship-opt.selected{border-color:var(--red);background:rgba(200,0,26,.06)}
+.ship-opt input[type="radio"]{accent-color:var(--red);width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.ship-label{flex:1}
+.ship-name{font-size:.85rem;font-weight:500;margin-bottom:.15rem}
+.ship-eta{font-size:.72rem;color:var(--cream-dim);letter-spacing:.04em}
+.ship-price{font-size:.9rem;font-weight:600;white-space:nowrap}
+.ship-price.free{color:var(--success);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+
+/* payment tabs */
+.pay-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.pay-tab{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.6rem 1rem;border:1px solid var(--border);
+  background:transparent;color:var(--cream-dim);
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:all .18s;font-family:var(--font-body);
+}
+.pay-tab:hover{border-color:var(--border-hover);color:var(--cream)}
+.pay-tab.active{border-color:var(--red);color:var(--cream);background:rgba(200,0,26,.08)}
+
+.pay-panel{display:none}
+.pay-panel.active{display:block;animation:fadeIn .25s var(--ease-out)}
+
+/* card visual */
+.card-visual{
+  height:130px;background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 60%,#3a1010 100%);
+  border:1px solid var(--border);
+  padding:1.25rem 1.5rem;
+  display:flex;flex-direction:column;justify-content:space-between;
+  margin-bottom:1.25rem;position:relative;overflow:hidden;
+}
+.card-visual::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 20%,rgba(200,0,26,.15) 0%,transparent 60%);
+}
+.card-chip{
+  width:32px;height:24px;background:linear-gradient(135deg,#d4a843,#b8882a);
+  border-radius:4px;position:relative;z-index:1;
+}
+.card-chip::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,.3)}
+.card-chip::after{content:"";position:absolute;left:33%;top:0;bottom:0;width:1px;background:rgba(0,0,0,.3)}
+.card-bottom{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1}
+.card-num{font-family:var(--font-head);font-size:1.1rem;letter-spacing:.22em;color:rgba(240,237,232,.7)}
+.card-brand{font-family:var(--font-head);font-size:1rem;letter-spacing:.08em;color:var(--cream)}
+
+/* oxxo panel */
+.oxxo-ref{
+  background:var(--surface-2);border:1px solid var(--border);
+  padding:1.25rem;text-align:center;
+}
+.oxxo-code{
+  font-family:var(--font-head);font-size:1.8rem;letter-spacing:.15em;
+  color:var(--cream);margin:.5rem 0;
+}
+.oxxo-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-dim)}
+.oxxo-exp{font-size:.72rem;color:var(--cream-dim);margin-top:.5rem}
+
+/* spei panel */
+.spei-data{display:flex;flex-direction:column;gap:.875rem}
+.spei-row{display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:var(--surface-2);border:1px solid var(--border)}
+.spei-key{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-dim)}
+.spei-val{font-size:.85rem;font-weight:500;font-family:monospace;letter-spacing:.06em}
+.copy-btn{
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--red);background:none;border:none;cursor:pointer;
+  font-family:var(--font-body);
+}
+
+/* check row */
+.check-row{display:flex;align-items:flex-start;gap:.625rem;margin-top:1rem}
+.check-input{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--red);cursor:pointer}
+.check-label{font-size:.8rem;color:var(--cream-dim);line-height:1.5;cursor:pointer}
+.check-label a{color:var(--red);text-decoration:none}
+
+/* ORDER SIDE */
+.order-side{}
+.order-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:1.75rem;position:sticky;top:84px;
+}
+.order-title{font-family:var(--font-head);font-size:1.5rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem;padding-bottom:1.1rem;border-bottom:1px solid var(--border)}
+
+/* mini items */
+.mini-items{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem}
+.mini-item{display:flex;gap:.875rem;align-items:center}
+.mini-thumb{
+  width:52px;height:64px;flex-shrink:0;
+  background:var(--surface-2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.mini-thumb svg{opacity:.1;width:20px;height:20px}
+.mini-qty{
+  position:absolute;top:-6px;right:-6px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--surface-3);border:1px solid var(--border);
+  font-size:.58rem;display:flex;align-items:center;justify-content:center;
+}
+.mini-info{flex:1;min-width:0}
+.mini-name{font-size:.82rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-variant{font-size:.68rem;color:var(--cream-dim);margin-top:.15rem}
+.mini-price{font-size:.88rem;font-weight:600;white-space:nowrap}
+
+/* summary lines */
+.sum-lines{display:flex;flex-direction:column;gap:.75rem;padding-bottom:1.1rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.sum-line{display:flex;justify-content:space-between;align-items:center}
+.sum-label{font-size:.78rem;color:var(--cream-dim)}
+.sum-val{font-size:.85rem;color:var(--cream);font-weight:500}
+.sum-val.free{color:var(--success);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.sum-val.discount{color:#a78bfa}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem}
+.total-label{font-family:var(--font-head);font-size:1rem;letter-spacing:.1em;text-transform:uppercase}
+.total-val{font-family:var(--font-head);font-size:1.75rem;letter-spacing:.04em}
+
+/* submit */
+.btn-pay{
+  display:block;width:100%;padding:1rem;text-align:center;
+  background:var(--red);color:#fff;border:none;
+  font-family:var(--font-head);font-size:1.15rem;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .2s var(--ease-out),box-shadow .2s;
+  margin-bottom:.875rem;
+}
+.btn-pay::before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.12);transform:translateX(-100%) skewX(-15deg);transition:transform .4s var(--ease-out)}
+.btn-pay:hover::before{transform:translateX(120%) skewX(-15deg)}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 10px 36px var(--red-glow)}
+.btn-pay:active{transform:translateY(0)}
+.btn-pay.loading{pointer-events:none}
+.btn-pay.loading::after{content:"";display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.btn-pay.loading span{opacity:0}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+.secure-row{display:flex;align-items:center;justify-content:center;gap:.4rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:1.25rem}
+.pay-logos{display:flex;justify-content:center;gap:.5rem;padding-top:1.1rem;border-top:1px solid var(--border)}
+.pay-logo{height:24px;padding:0 8px;background:var(--surface-2);border:1px solid var(--border);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-dim);display:flex;align-items:center}
+
+/* SUCCESS OVERLAY */
+.success-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.95);backdrop-filter:blur(12px);
+  display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:1.5rem;text-align:center;padding:2rem;
+}
+.success-overlay.visible{display:flex;animation:fadeIn .4s var(--ease-out)}
+.success-ring{
+  width:96px;height:96px;border-radius:50%;
+  border:2px solid rgba(74,222,128,.3);
+  display:flex;align-items:center;justify-content:center;
+  animation:pop .6s var(--ease-spring);
+}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-check{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(74,222,128,.12);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--success);font-size:2rem;
+}
+.success-title{font-family:var(--font-head);font-size:clamp(2.5rem,6vw,4rem);letter-spacing:.06em;text-transform:uppercase;line-height:.95}
+.success-title span{color:var(--red)}
+.success-body{font-size:.95rem;color:var(--cream-dim);max-width:400px;line-height:1.65}
+.success-order{
+  display:inline-flex;align-items:center;gap:.875rem;
+  padding:.875rem 1.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+}
+.success-num{font-family:var(--font-head);font-size:1.2rem;color:var(--red);letter-spacing:.1em}
+.success-actions{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem}
+.btn-outline{padding:.75rem 1.75rem;border:1px solid var(--border);background:transparent;color:var(--cream-dim);font-family:var(--font-head);font-size:.95rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--border-hover);color:var(--cream)}
+.btn-solid{padding:.75rem 1.75rem;background:var(--red);color:#fff;border:none;font-family:var(--font-head);font-size:.95rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block}
+
+/* RESPONSIVE */
+@media(max-width:1000px){.checkout-wrap{grid-template-columns:1fr;gap:2rem}.order-card{position:static}}
+@media(max-width:700px){.checkout-wrap{padding:2rem 1.25rem 5rem}.form-grid.cols-2,.form-grid.cols-3{grid-template-columns:1fr}.steps .step-name{display:none}.form-block{padding:1.5rem}}
+@media(max-width:600px){nav{padding:0 1.25rem}}
+</style>
+</head>
+<body>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-ring">
+    <div class="success-check">✓</div>
+  </div>
+  <div class="success-title">¡Pedido<br><span>confirmado!</span></div>
+  <p class="success-body">Tu pedido ha sido recibido y está siendo procesado. Recibirás un correo de confirmación en breve.</p>
+  <div class="success-order">
+    Número de orden: <span class="success-num">#JPS-2025-0847</span>
+  </div>
+  <div class="success-actions">
+    <a href="02-catalog.html" class="btn-outline">Seguir comprando</a>
+    <a href="01-hero.html" class="btn-solid">Ver mis pedidos</a>
+  </div>
+</div>
+
+<nav>
+  <a href="01-hero.html" class="nav-logo">JP<span>S</span>TUDIOS</a>
+  <div class="nav-secure">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Pago seguro
+  </div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="steps">
+    <div class="step done">
+      <div class="step-num">✓</div>
+      <span class="step-name">Carrito</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <span class="step-name">Envío</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <span class="step-name">Pago</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <span class="step-name">Confirmación</span>
+    </div>
+  </div>
+</div>
+
+<div class="checkout-wrap">
+
+  <!-- FORM SIDE -->
+  <div class="form-side">
+
+    <!-- CONTACTO -->
+    <div class="form-block" style="animation-delay:.05s">
+      <div class="block-header">
+        <div style="display:flex;align-items:center">
+          <div class="block-num">1</div>
+          <span class="block-title">Información de contacto</span>
+        </div>
+        <button class="block-edit">Cambiar</button>
+      </div>
+      <div class="form-grid cols-2">
+        <div>
+          <label for="nombre">Nombre</label>
+          <input class="form-input" type="text" id="nombre" placeholder="Nombre" autocomplete="given-name" required/>
+        </div>
+        <div>
+          <label for="apellido">Apellido</label>
+          <input class="form-input" type="text" id="apellido" placeholder="Apellido" autocomplete="family-name" required/>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top:.875rem">
+        <div>
+          <label for="email">Correo electrónico</label>
+          <input class="form-input" type="email" id="email" placeholder="tu@email.com" autocomplete="email" required/>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top:.875rem">
+        <div>
+          <label for="tel">Teléfono</label>
+          <input class="form-input" type="tel" id="tel" placeholder="+52 222 000 0000" autocomplete="tel" required/>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENVÍO -->
+    <div class="form-block" style="animation-delay:.12s">
+      <div class="block-header">
+        <div style="display:flex;align-items:center">
+          <div class="block-num">2</div>
+          <span class="block-title">Dirección de envío</span>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:.875rem">
+        <div>
+          <label for="calle">Calle y número</label>
+          <input class="form-input" type="text" id="calle" placeholder="Calle, número exterior e interior" autocomplete="address-line1" required/>
+        </div>
+      </div>
+      <div class="form-grid cols-2" style="margin-bottom:.875rem">
+        <div>
+          <label for="colonia">Colonia</label>
+          <input class="form-input" type="text" id="colonia" placeholder="Colonia" autocomplete="address-level3" required/>
+        </div>
+        <div>
+          <label for="cp">Código postal</label>
+          <input class="form-input" type="text" id="cp" placeholder="90000" autocomplete="postal-code" required maxlength="5"/>
+        </div>
+      </div>
+      <div class="form-grid cols-2">
+        <div>
+          <label for="ciudad">Ciudad / Municipio</label>
+          <input class="form-input" type="text" id="ciudad" placeholder="Ciudad" autocomplete="address-level2" required/>
+        </div>
+        <div>
+          <label for="estado">Estado</label>
+          <select class="form-select" id="estado" required>
+            <option value="">Seleccionar</option>
+            <option>Tlaxcala</option>
+            <option>CDMX</option>
+            <option>Puebla</option>
+            <option>Jalisco</option>
+            <option>Nuevo León</option>
+            <option>Estado de México</option>
+            <option>Veracruz</option>
+            <option>Oaxaca</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:.875rem">
+        <label for="refs">Referencias (opcional)</label>
+        <input class="form-input" type="text" id="refs" placeholder="Ej: Entre calles, edificio color azul..."/>
+      </div>
+    </div>
+
+    <!-- OPCIONES DE ENVÍO -->
+    <div class="form-block" style="animation-delay:.19s">
+      <div class="block-header">
+        <div style="display:flex;align-items:center">
+          <div class="block-num">3</div>
+          <span class="block-title">Método de envío</span>
+        </div>
+      </div>
+      <div class="ship-options">
+        <label class="ship-opt selected" onclick="selectShip(this)">
+          <input type="radio" name="shipping" value="std" checked/>
+          <div class="ship-label">
+            <div class="ship-name">Envío estándar</div>
+            <div class="ship-eta">3–5 días hábiles · Fedex / DHL</div>
+          </div>
+          <span class="ship-price free">Gratis</span>
+        </label>
+        <label class="ship-opt" onclick="selectShip(this)">
+          <input type="radio" name="shipping" value="exp"/>
+          <div class="ship-label">
+            <div class="ship-name">Envío express</div>
+            <div class="ship-eta">1–2 días hábiles · DHL Express</div>
+          </div>
+          <span class="ship-price">$150 MXN</span>
+        </label>
+        <label class="ship-opt" onclick="selectShip(this)">
+          <input type="radio" name="shipping" value="same"/>
+          <div class="ship-label">
+            <div class="ship-name">Mismo día — Tlaxcala</div>
+            <div class="ship-eta">Hoy antes de las 20:00 hrs</div>
+          </div>
+          <span class="ship-price">$80 MXN</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- PAGO -->
+    <div class="form-block" style="animation-delay:.26s">
+      <div class="block-header">
+        <div style="display:flex;align-items:center">
+          <div class="block-num">4</div>
+          <span class="block-title">Método de pago</span>
+        </div>
+      </div>
+
+      <div class="pay-tabs">
+        <button class="pay-tab active" onclick="setPayTab('card',this)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Tarjeta
+        </button>
+        <button class="pay-tab" onclick="setPayTab('oxxo',this)">
+          OXXO Pay
+        </button>
+        <button class="pay-tab" onclick="setPayTab('spei',this)">
+          SPEI
+        </button>
+        <button class="pay-tab" onclick="setPayTab('mp',this)">
+          <svg width="14" height="14" fill="#009ee3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/></svg>
+          MercadoPago
+        </button>
+      </div>
+
+      <!-- TARJETA -->
+      <div class="pay-panel active" id="ppCard">
+        <div class="card-visual">
+          <div class="card-chip"></div>
+          <div class="card-bottom">
+            <span class="card-num" id="cardNumDisplay">•••• •••• •••• ••••</span>
+            <span class="card-brand">JP Studios</span>
+          </div>
+        </div>
+        <div class="form-grid" style="margin-bottom:.875rem">
+          <div>
+            <label for="cardNum">Número de tarjeta</label>
+            <input class="form-input" type="text" id="cardNum" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" oninput="formatCard(this)" required/>
+          </div>
+        </div>
+        <div class="form-grid cols-3">
+          <div>
+            <label for="cardName">Nombre en la tarjeta</label>
+            <input class="form-input" type="text" id="cardName" placeholder="NOMBRE APELLIDO" autocomplete="cc-name" style="text-transform:uppercase" required/>
+          </div>
+          <div>
+            <label for="cardExp">Vencimiento</label>
+            <input class="form-input" type="text" id="cardExp" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" oninput="formatExp(this)" required/>
+          </div>
+          <div>
+            <label for="cardCvv">CVV</label>
+            <input class="form-input" type="text" id="cardCvv" placeholder="•••" maxlength="4" autocomplete="cc-csc" required/>
+          </div>
+        </div>
+        <div class="check-row">
+          <input class="check-input" type="checkbox" id="saveCard"/>
+          <label class="check-label" for="saveCard">Guardar tarjeta para futuras compras</label>
+        </div>
+      </div>
+
+      <!-- OXXO -->
+      <div class="pay-panel" id="ppOxxo">
+        <p style="font-size:.85rem;color:var(--cream-dim);line-height:1.65;margin-bottom:1.25rem">Se generará una referencia de pago. Tienes <strong style="color:var(--cream)">72 horas</strong> para realizar el pago en cualquier tienda OXXO. Tu pedido se procesa al confirmar el pago.</p>
+        <div class="oxxo-ref">
+          <div class="oxxo-label">Tu referencia OXXO</div>
+          <div class="oxxo-code">8523 7461 9034 5820</div>
+          <div class="oxxo-exp">Vence: 19 Jun 2025 · $2,462 MXN</div>
+        </div>
+      </div>
+
+      <!-- SPEI -->
+      <div class="pay-panel" id="ppSpei">
+        <p style="font-size:.85rem;color:var(--cream-dim);line-height:1.65;margin-bottom:1.25rem">Realiza una transferencia desde tu banca en línea a la siguiente cuenta CLABE. El pedido se confirma en minutos.</p>
+        <div class="spei-data">
+          <div class="spei-row">
+            <div><div class="spei-key">Banco</div><div class="spei-val">STP / Conekta</div></div>
+          </div>
+          <div class="spei-row">
+            <div><div class="spei-key">CLABE</div><div class="spei-val">646180110400000000</div></div>
+            <button class="copy-btn" onclick="copyClabe(this)">Copiar</button>
+          </div>
+          <div class="spei-row">
+            <div><div class="spei-key">Concepto</div><div class="spei-val">JP2025-0847</div></div>
+          </div>
+          <div class="spei-row">
+            <div><div class="spei-key">Monto exacto</div><div class="spei-val" style="color:var(--red)">$2,462.00 MXN</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MERCADOPAGO -->
+      <div class="pay-panel" id="ppMp">
+        <p style="font-size:.85rem;color:var(--cream-dim);line-height:1.65;margin-bottom:1.25rem">Al confirmar serás redirigido a MercadoPago para completar el pago de forma segura con tu cuenta o tarjeta.</p>
+        <div style="display:flex;align-items:center;gap:.875rem;padding:1.25rem;background:var(--surface-2);border:1px solid var(--border)">
+          <svg width="32" height="32" fill="#009ee3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/></svg>
+          <div>
+            <div style="font-weight:600;font-size:.9rem">MercadoPago</div>
+            <div style="font-size:.75rem;color:var(--cream-dim)">Acepta tarjetas, efectivo y transferencias</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ORDER SIDE -->
+  <div class="order-side">
+    <div class="order-card">
+      <div class="order-title">Tu pedido</div>
+
+      <div class="mini-items">
+        <div class="mini-item">
+          <div class="mini-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+            <span class="mini-qty">1</span>
+          </div>
+          <div class="mini-info">
+            <div class="mini-name">Void Hoodie — Onyx</div>
+            <div class="mini-variant">M · Onyx</div>
+          </div>
+          <div class="mini-price">$899</div>
+        </div>
+        <div class="mini-item">
+          <div class="mini-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+            <span class="mini-qty">1</span>
+          </div>
+          <div class="mini-info">
+            <div class="mini-name">Archive Jacket Vol.I</div>
+            <div class="mini-variant">L · Onyx</div>
+          </div>
+          <div class="mini-price">$1,299</div>
+        </div>
+        <div class="mini-item">
+          <div class="mini-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+            <span class="mini-qty">2</span>
+          </div>
+          <div class="mini-info">
+            <div class="mini-name">Tote Bag — Canvas</div>
+            <div class="mini-variant">Única · Natural</div>
+          </div>
+          <div class="mini-price">$698</div>
+        </div>
+      </div>
+
+      <div class="sum-lines">
+        <div class="sum-line">
+          <span class="sum-label">Subtotal</span>
+          <span class="sum-val">$2,896 MXN</span>
+        </div>
+        <div class="sum-line">
+          <span class="sum-label">Descuento JP2025</span>
+          <span class="sum-val discount">−$434 MXN</span>
+        </div>
+        <div class="sum-line">
+          <span class="sum-label">Envío</span>
+          <span class="sum-val free">Gratis</span>
+        </div>
+        <div class="sum-line">
+          <span class="sum-label">IVA incluido</span>
+          <span class="sum-val">$380 MXN</span>
+        </div>
+      </div>
+
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span class="total-val">$2,462 MXN</span>
+      </div>
+
+      <button class="btn-pay" id="payBtn" onclick="handlePay()"><span>Confirmar pedido</span></button>
+
+      <div class="secure-row">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Pago 100% seguro y encriptado
+      </div>
+
+      <div class="pay-logos">
+        <span class="pay-logo">Visa</span>
+        <span class="pay-logo">MC</span>
+        <span class="pay-logo">OXXO</span>
+        <span class="pay-logo">SPEI</span>
+        <span class="pay-logo">SSL</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function selectShip(el){document.querySelectorAll('.ship-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function setPayTab(id,btn){
+  document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pay-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pp'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');
+}
+function formatCard(inp){
+  let v=inp.value.replace(/\D/g,'').slice(0,16);
+  inp.value=v.replace(/(.{4})/g,'$1 ').trim();
+  const disp=v.padEnd(16,'•');
+  document.getElementById('cardNumDisplay').textContent=disp.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExp(inp){
+  let v=inp.value.replace(/\D/g,'');
+  if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);
+  inp.value=v;
+}
+function copyClabe(btn){
+  navigator.clipboard.writeText('646180110400000000').then(()=>{btn.textContent='✓ Copiado';setTimeout(()=>btn.textContent='Copiar',2000)});
+}
+function handlePay(){
+  const btn=document.getElementById('payBtn');
+  btn.classList.add('loading');
+  setTimeout(()=>{document.getElementById('successOverlay').classList.add('visible')},2000);
+}
+</script>
+</body>
+</html>
